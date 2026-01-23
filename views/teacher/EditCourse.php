@@ -272,6 +272,7 @@ $levels = $courseModel->getLevelsByUserId($user_id);
                             <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea name="course_detail"
+                            id="summernote"
                             class="form-control"
                             rows="6"
                             placeholder="Enter a detailed description of the course objectives, content, and learning outcomes..."><?= htmlspecialchars($course['course_detail']) ?></textarea>

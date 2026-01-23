@@ -72,6 +72,10 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Boxicons -->
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+        <!-- Summer note -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 
     <style>
         body {
@@ -354,7 +358,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                     <small>รายละเอียดเพิ่มเติม:</small>
                 </span>
                 <span class="info-value">
-                    <small><?= nl2br(htmlspecialchars($assignment['description'])) ?: '-' ?></small>
+                    <small><?= nl2br(($assignment['description'])) ?: '-' ?></small>
                 </span>
             </div>
 
@@ -496,6 +500,24 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                     <?php include_once('../../include/alert.php');?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Summer note -->
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    </script>
 </body>
 
 </html>
