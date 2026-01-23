@@ -325,7 +325,7 @@ $teacher_courses = $courseModel->getCoursesByUserId($user_id);
                             id="summernote"
                             name="description"
                             rows="6"
-                            placeholder="Enter detailed instructions, requirements, and objectives for this assignment..."><?= htmlspecialchars($assignment['description']) ?></textarea>
+                            placeholder="Enter detailed instructions, requirements, and objectives for this assignment..."><?= ($assignment['description']) ?></textarea>
                     </div>
                 </div>
 
