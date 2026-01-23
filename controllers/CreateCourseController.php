@@ -1,4 +1,9 @@
 <?php
+
+var_dump($_POST);
+die();
+
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -30,33 +35,27 @@ $stmt->execute();
 $teacher = $stmt->fetch(PDO::FETCH_ASSOC);
 $teacher_id = $teacher['teacher_id'] ?? null; // ใช้ null ในกรณีที่ไม่พบ
 
-// 1. ตรวจสอบข้อมูลเบื้องต้น
 if (!$course_code || !$course_name) {
     $_SESSION['error'] = "Course code and name are required.";
     header("Location: ../views/teacher/CreateCourse.php");
     exit;
 }
 
-// 2. ตรวจสอบ Teacher ID
 if (!$teacher_id) {
     $_SESSION['error'] = "Teacher ID not found. Cannot create course.";
     header("Location: ../views/teacher/CreateCourse.php");
     exit;
 }
 
-// 3. สร้างวิชา และจัดการ Session Success
 try {
     $courseModel->createCourse($course_code, $course_name, $level,$class_id, $course_detail, $teacher_id, $status);
     
-    // 📌 เพิ่ม Session Success Message
     $_SESSION['success'] = "Course created successfully!";
     
     header("Location: ../views/teacher/CourseManager.php");
     exit;
 
 } catch (Exception $e) {
-    // 📌 จัดการ Error Message หากมีปัญหาในการสร้าง Course
-    // ในกรณีที่เมธอด createCourse ไม่ได้โยน Exception แต่คืนค่า false
     if (isset($db->errorCode) && $db->errorCode() != '00000') {
         $_SESSION['error'] = "Error creating course: " . $db->errorInfo()[2];
     } else {

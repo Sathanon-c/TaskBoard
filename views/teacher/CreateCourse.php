@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     <!-- Boxicons -->
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
     <!-- Summer note -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     
@@ -229,8 +229,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                         <label class="form-label">
                             <small>รายละเอียดเพิ่มเติม</small>
                         </label>
-                        <textarea name="course_detail" class="form-control" rows="6" 
-                        placeholder="กรอกรายละเอียดเพิ่มเพิ่มหรือจุดประสงค์ของรายวิชา" id="summernote"></textarea>
+                        <textarea name="course_detail"
+                            class="form-control"
+                            rows="6"
+                            placeholder="กรอกรายละเอียดเพิ่มเพิ่มหรือจุดประสงค์ของรายวิชา"
+                            id="summernote"
+                            required></textarea>
                     </div>
                 </div>
 
@@ -250,26 +254,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Form validation and enhancement
-document.getElementById('createCourseForm').addEventListener('submit', function(e) {
-    const courseCode = document.querySelector('input[name="course_code"]').value.trim();
-    const courseName = document.querySelector('input[name="course_name"]').value.trim();
-    const level = document.querySelector('select[name="level"]').value;
+        document.getElementById('createCourseForm').addEventListener('submit', function(e) {
+            const courseCode = document.querySelector('input[name="course_code"]').value.trim();
+            const courseName = document.querySelector('input[name="course_name"]').value.trim();
+            const level = document.querySelector('select[name="level"]').value;
+            const courseDetail = document.querySelector('textarea[name="course_detail"]').value.trim();
 
-    // ✅ ดึงค่าจาก summernote
-    const courseDetail = $('#summernote').summernote('code').trim();
+            if (!courseCode || !courseName || !level || !courseDetail) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                return false;
+            }
 
-    if (!courseCode || !courseName || !level || courseDetail === '<p><br></p>') {
-        e.preventDefault();
-        alert('Please fill in all required fields.');
-        return false;
-    }
-
-    if (!confirm('Are you sure you want to create this course?')) {
-        e.preventDefault();
-        return false;
-    }
-});
-
+            // Confirm before submit
+            if (!confirm('Are you sure you want to create this course?')) {
+                e.preventDefault();
+                return false;
+            }
+        });
 
         // Auto-resize textarea
         const textarea = document.querySelector('textarea[name="course_detail"]');
