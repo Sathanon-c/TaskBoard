@@ -113,10 +113,8 @@ $profileData = [
 
     <!-- Header -->
     <div class="page-header">
-        <h2 class="mb-1 fw-bold text-dark">
-            <i class='bx bxs-user-detail me-2'></i>Edit My Profile
-        </h2>
-        <p class="text-muted mb-0">Update your personal and professional information.</p>
+        <h2 class="mb-1 fw-bold text-dark">แก้ไขข้อมูลโปรไฟล์</h2>
+        <p class="text-muted mb-0">แก้ไขข้อมูลบัญชื่อและข้อมูลส่วนตัว</p>
     </div>
 
     <div class="card p-5">
@@ -125,53 +123,50 @@ $profileData = [
             <input type="hidden" name="role" value="<?= $user['role'] ?>">
 
             <!-- Account -->
-            <h5 class="section-header">Account Information</h5>
+            <h5 class="section-header">ข้อมูลบัญชี</h5>
 
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold"><small>Email</small></label>
+                    <label class="form-label fw-bold"><small>อีเมล</small></label>
                     <input type="email" class="form-control" name="email"
                            value="<?= htmlspecialchars($user['email']) ?>" required>
                 </div>
                 <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold"><small>Phone</small></label>
+                    <label class="form-label fw-bold"><small>เบอร์โทรศัพท์</small></label>
                     <input type="text" name="phone" class="form-control"
                            value="<?= htmlspecialchars($profileData['phone']) ?>">
                 </div>
             </div>
 
             <!-- Personal -->
-            <h5 class="section-header">Personal Information</h5>
+            <h5 class="section-header">ข้อมูลส้วนตัว</h5>
 
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold"><small>First Name</small></label>
+                    <label class="form-label fw-bold"><small>ชื่อจริง</small></label>
                     <input type="text" name="first_name" class="form-control"
                            value="<?= htmlspecialchars($user['first_name']) ?>" required>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold"><small>Last Name</small></label>
+                    <label class="form-label fw-bold"><small>นามสกุล</small></label>
                     <input type="text" name="last_name" class="form-control"
                            value="<?= htmlspecialchars($user['last_name']) ?>" required>
                 </div>
 
                 <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold"><small>Gender</small></label>
+                    <label class="form-label fw-bold"><small>เพศ</small></label>
                     <select name="gender" class="form-select">
-                        <option value="">-- Select Gender --</option>
-                        <option value="male" <?= $profileData['gender'] === 'male' ? 'selected' : '' ?>>Male</option>
-                        <option value="female" <?= $profileData['gender'] === 'female' ? 'selected' : '' ?>>Female</option>
+                        <option value="">-- เลือกเพศ --</option>
+                        <option value="male" <?= $profileData['gender'] === 'male' ? 'selected' : '' ?>>ชาย</option>
+                        <option value="female" <?= $profileData['gender'] === 'female' ? 'selected' : '' ?>>หญิง</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Professional -->
-            <h5 class="section-header">Professional Information</h5>
-
             <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold"><small>Department</small></label>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold"><small>สาขาวิชา</small></label>
                     <input type="text" name="department" class="form-control"
                            value="<?= htmlspecialchars($profileData['department']) ?>">
                 </div>
@@ -179,10 +174,10 @@ $profileData = [
 
             <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-2">
                 <a href="Profile.php" class="btn btn-secondary px-4">
-                    <i class='bx bx-x me-1'></i> Cancel
+                    <i class='bx bx-x me-1'></i> ยกเลิด
                 </a>
                 <button type="submit" class="btn btn-primary px-4">
-                    <i class='bx bx-save me-1'></i> Save Changes
+                    <i class='bx bx-save me-1'></i> บันทึกการ
                 </button>
             </div>
 

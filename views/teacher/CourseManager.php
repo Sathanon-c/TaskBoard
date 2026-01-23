@@ -138,13 +138,12 @@ $courses = $courseModel->getCoursesByUserId($user_id, $selected_level, $search);
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2 class="mb-1 fw-bold text-dark d-flex align-items-center">
-                        <i class='bx bxs-book-content me-2'></i> Course Manager
+                        <i class='bx bxs-book-content me-2'></i> จัดการรายวิชา
                     </h2>
-                    <p class="text-muted mb-0">Manage your courses and track student progress</p>
+                    <p class="text-muted mb-0">จัดการรายวิชาของคุณและติดตามงานนักศึกษา</p>
                 </div>
                 <div class="stats-badge py-3 px-4">
-                    <i class='bx bxs-book'></i>
-                    <small><span><?= count($courses) ?> Courses</span></small>
+                    <small><span>ทั้งหมด <?= count($courses) ?> รายวิชา</span></small>
                 </div>
             </div>
         </div>
@@ -154,10 +153,10 @@ $courses = $courseModel->getCoursesByUserId($user_id, $selected_level, $search);
             <form method="GET" class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label fw-semibold mb-2">
-                        <i class='bx bx-filter-alt me-1'></i><small>Filter by Level</small>
+                        <i class='bx bx-filter-alt me-1'></i><small>ค้นหาจากระดับชั้น</small>
                     </label>
                     <select name="level" class="form-select form-select-sm py-2">
-                        <option value="">All Levels</option>
+                        <option value="">ทั้งหมด</option>
                         <?php foreach ($levels as $level): ?>
                             <option value="<?= htmlspecialchars($level) ?>" <?= ($selected_level == $level) ? 'selected' : '' ?>>
                                 <?= htmlspecialchars($level) ?>
@@ -168,21 +167,18 @@ $courses = $courseModel->getCoursesByUserId($user_id, $selected_level, $search);
 
                 <div class="col-md-5">
                     <label class="form-label fw-semibold mb-2">
-                        <i class='bx bx-search me-1'></i><small>Search</small>
+                        <i class='bx bx-search me-1'></i><small>ค้นหา</small>
                     </label>
                     <input type="text" name="search" value="<?= htmlspecialchars($search) ?>"
-                        class="form-control form-control-sm py-2" placeholder="Search by course name">
+                        class="form-control form-control-sm py-2" placeholder="ค้นหาจากชื่อรายวิชา">
                 </div>
 
                 <div class="col-md-4 d-flex gap-2">
                     <button type="submit" class="btn btn-primary px-4">
-                        <small>Filter</small>
+                        <small>ค้นหา</small>
                     </button>
-                    <a href="?" class="btn btn-secondary px-3 d-flex justify-content-center align-items-center">
-                        <i class='bxr bx-rotate-ccw fw-bold'></i>
-                    </a>
                     <a href="CreateCourse.php" class="btn btn-success px-3">
-                        <small>Create</small>
+                        <small>สร้างรายวิชา</small>
                     </a>
                 </div>
             </form>
@@ -210,7 +206,7 @@ $courses = $courseModel->getCoursesByUserId($user_id, $selected_level, $search);
                                         <small><?= htmlspecialchars($course['class_id']) ?></small>
                                     </span>
                                     <span class="badge-level mb-3 d-inline-block ms-1">
-                                        <small><?= $course['student_count'] ?? 0 ?> students</small>
+                                        <small>นักศึกษา <?= $course['student_count'] ?? 0 ?> คน</small>
                                     </span>
                                     <div class="border-top pt-3 mt-3"></div>
                                 </div>
@@ -222,8 +218,8 @@ $courses = $courseModel->getCoursesByUserId($user_id, $selected_level, $search);
         <?php else: ?>
             <div class="empty-state">
                 <i class='bx bx-book-open fs-1 text-muted'></i>
-                <p class="text-muted mt-3 mb-0">No courses found</p>
-                <p class="text-muted mb-0"><small>Try adjusting your filters or create a new course</small></p>
+                <p class="text-muted mt-3 mb-0">ไม่พบรายวิชา</p>
+                <p class="text-muted mb-0"><small>ลองค้นหาอีกครั้งหรือสรร้างนรายวิชาใหม่</small></p>
             </div>
         <?php endif; ?>
 

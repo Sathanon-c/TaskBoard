@@ -303,7 +303,7 @@ $file_path = $submission['file_path'];
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <i class='bx bxs-file-find fs-4 text-primary'></i>
-                    <h4 class="mb-0 fw-bold">Review Submission : <span class="fs-5 text-primary"><?= $assignment_title ?></span></h4>
+                    <h4 class="mb-0 fw-bold">ตรวจงานที่ส่ง : <span class="fs-5 text-primary"><?= $assignment_title ?></span></h4>
                 </div>
                 <a href="AssignmentDetail.php?assignment_id=<?= htmlspecialchars($assignment_id) ?>"
                     class="action-icon">
@@ -318,13 +318,13 @@ $file_path = $submission['file_path'];
                 <div class="info-card">
                     <div class="card-header-custom">
                         <i class='bx bxs-user-circle'></i>
-                        <h5>Student Work</h5>
+                        <h5>งานของนักศึกษา</h5>
                     </div>
 
                     <div class="info-item">
                         <i class='bx bx-user'></i>
                         <div class="flex-grow-1">
-                            <div class="info-label"><small>Student</small></div>
+                            <div class="info-label"><small>ชื่อนักศึกษา</small></div>
                             <div class="info-value fw-bold text-dark"><?= $student_name ?></div>
                         </div>
                     </div>
@@ -332,7 +332,7 @@ $file_path = $submission['file_path'];
                     <div class="info-item">
                         <i class='bx bx-calendar'></i>
                         <div class="flex-grow-1">
-                            <div class="info-label"><small>Submitted On</small></div>
+                            <div class="info-label"><small>ส่งเมื่อ</small></div>
                             <div class="info-value"><?= date('d M Y H:i', strtotime($submission['submitted_at'])) ?></div>
                         </div>
                     </div>
@@ -340,7 +340,7 @@ $file_path = $submission['file_path'];
                     <div class="info-item">
                         <i class='bx bx-check-shield'></i>
                         <div class="flex-grow-1">
-                            <div class="info-label mb-2"><small>Current Status</small></div>
+                            <div class="info-label mb-2"><small>สถานะ</small></div>
                             <span class="status-badge <?= $submission['status'] === 'Needs Revision' ? 'status-revision' : ($submission['status'] === 'Graded' ? 'status-graded' : 'status-submitted') ?>">
                                 <?= htmlspecialchars($submission['status']) ?>
                             </span>
@@ -351,13 +351,13 @@ $file_path = $submission['file_path'];
                     <div class="file-section">
                         <div class="section-subtitle">
                             <i class='bx bxs-file'></i>
-                            <span>Submitted File</span>
+                            <span>ไฟล์งาน</span>
                         </div>
                         <a href="../../<?= htmlspecialchars($file_path) ?>"
                             target="_blank"
                             class="btn download-btn w-100">
                             <i class='bx bxs-download me-2'></i>
-                            Download Submitted File
+                            ดาวโหลดไฟล์งาน
                         </a>
                     </div>
                 </div>
@@ -368,7 +368,7 @@ $file_path = $submission['file_path'];
                 <div class="form-card">
                     <div class="card-header-custom">
                         <i class='bx bxs-edit'></i>
-                        <h5>Feedback & Status Update</h5>
+                        <h5>ตอบกลับ & อัพเดตงาน</h5>
                     </div>
 
                     <form action="../../controllers/TeacherSubmissionController.php" method="POST">
@@ -377,17 +377,17 @@ $file_path = $submission['file_path'];
                         <div class="mb-4">
                             <label for="new_status" class="form-label">
                                 <i class='bx bx-check-circle'></i>
-                                <small>Update Status</small>
+                                <small>อัพเดตงาน</small>
                             </label>
                             <select name="new_status" id="new_status" class="form-select" required>
                                 <option value="Submitted" <?= $submission['status'] === 'Submitted' ? 'selected' : '' ?>>
-                                    Submitted (Accepted)
+                                    ส่งแล้ว
                                 </option>
                                 <option value="Needs Revision" <?= $submission['status'] === 'Needs Revision' ? 'selected' : '' ?>>
-                                    Needs Revision (ส่งกลับไปแก้ไข)
+                                    ส่งกลับไปแก้ไข
                                 </option>
                                 <option value="Graded" <?= $submission['status'] === 'Graded' ? 'selected' : '' ?>>
-                                    Graded (Finished Review)
+                                    ตรวจแล้ว
                                 </option>
                             </select>
                         </div>
@@ -395,7 +395,7 @@ $file_path = $submission['file_path'];
                         <div class="mb-4">
                             <label for="teacher_feedback" class="form-label">
                                 <i class='bx bx-message-square-detail'></i>
-                                <small>Teacher Feedback</small>
+                                <small>ตอบกลับ</small>
                             </label>
                             <textarea name="teacher_feedback"
                                 id="teacher_feedback"
@@ -410,7 +410,7 @@ $file_path = $submission['file_path'];
 
                         <button type="submit" class="btn submit-btn w-100">
                             <i class='bx bx-save me-2'></i>
-                            Save Feedback and Update Status
+                            บันทึกการอัพเดต
                         </button>
                     </form>
                 </div>

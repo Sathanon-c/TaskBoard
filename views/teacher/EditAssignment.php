@@ -253,8 +253,8 @@ $teacher_courses = $courseModel->getCoursesByUserId($user_id);
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <div>
-                        <h4 class="mb-0 fw-bold">Edit Assignment</h4>
-                        <small class="text-muted">Update assignment information and details</small>
+                        <h4 class="mb-0 fw-bold">แก้ไขงาน</h4>
+                        <small class="text-muted">แก้ไขรายละเอียดของงาน</small>
                     </div>
                 </div>
                 <a href="AssignmentDetail.php?assignment_id=<?= htmlspecialchars($assignment_id) ?>"class="action-icon">
@@ -300,28 +300,22 @@ $teacher_courses = $courseModel->getCoursesByUserId($user_id);
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bxr  bx-file-detail'></i>
-                        <h5 class="mb-0 fw-bold">Assignment Details</h5>
+                        <h5 class="mb-0 fw-bold">รายละเอียดของงาน</h5>
                     </div>
 
                     <div class="mb-3">
                         <label for="title" class="form-label">
 
-                            <small>Assignment Title</small>
+                            <small>ชื่องาน</small>
                         </label>
                         <input type="text"
-                            class="form-control"
-                            id="title"
-                            name="title"
-                            required
-                            maxlength="255"
-                            value="<?= htmlspecialchars($assignment['title']) ?>"
-                            placeholder="e.g., Homework #1: Variables and Data Types">
+                            class="form-control" id="title" name="title" required maxlength="255" value="<?= htmlspecialchars($assignment['title']) ?>" placeholder="e.g., Homework #1: Variables and Data Types">
                     </div>
 
                     <div class="mb-3">
                         <label for="description" class="form-label">
 
-                            <small>Description</small>
+                            <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea class="form-control"
                             id="description"
@@ -335,23 +329,18 @@ $teacher_courses = $courseModel->getCoursesByUserId($user_id);
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bx bxs-calendar'></i>
-                        <h5 class="mb-0 fw-bold">Deadline & Schedule</h5>
+                        <h5 class="mb-0 fw-bold">กำหนดส่ง</h5>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="deadline" class="form-label">
 
-                                <small>Due Date<span class="required-mark">*</span></small>
+                                <small>กำหนดส่ง<span class="required-mark">*</span></small>
                             </label>
                             <div class="date-input-wrapper">
                                 <i class='bx bx-calendar'></i>
-                                <input type="date"
-                                    class="form-control"
-                                    id="deadline"
-                                    name="deadline"
-                                    required
-                                    value="<?= htmlspecialchars($assignment['deadline']) ?>">
+                                <input type="date" class="form-control" id="deadline" name="deadline" required value="<?= htmlspecialchars($assignment['deadline']) ?>">
                             </div>
                         </div>
                     </div>
@@ -361,7 +350,7 @@ $teacher_courses = $courseModel->getCoursesByUserId($user_id);
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary px-4">
                         <i class='bx bx-save'></i>
-                        <small>Update Assignment</small>
+                        <small>อัปเดตงาน</small>
                     </button>
                 </div>
 

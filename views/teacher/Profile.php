@@ -240,36 +240,36 @@ if (!$user) {
                     <!-- Account Information -->
                     <h5 class="section-title">
                         <i class='bx bxs-info-circle'></i>
-                        Account Information
+                        ข้อมูลบัญชี
                     </h5>
 
                     <div class="info-grid">
                         <div class="info-item">
                             <div class="info-label">
-                                Email
+                                อีเมล
                             </div>
                             <div class="info-value"><?= htmlspecialchars($user['email']) ?></div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label">
-                                Created At
+                                สร้างเมื่อ
                             </div>
                             <div class="info-value"><?= date('d M Y, H:i', strtotime($user['created_at'])) ?></div>
                         </div>
 
                         <div class="info-item">
                             <div class="info-label">
-                                Status
+                                สถานะ
                             </div>
                             <div>
                                 <?php if ($user['active'] == 1): ?>
                                     <span class="status-badge status-active">
-                                        Active
+                                        เปิดการใช้งาน
                                     </span>
                                 <?php else: ?>
                                     <span class="status-badge status-inactive">
-                                        Inactive
+                                        ปิดการใช้งาน
                                     </span>
                                 <?php endif; ?>
                             </div>
@@ -278,85 +278,31 @@ if (!$user) {
 
                     <!-- Personal Details -->
                     <h5 class="section-title mt-4">
-                        <i class='bxr  bx-user'></i> Personal Details
+                        <i class='bxr  bx-user'></i> ข้อมูลส่วนตัว
                     </h5>
 
-                    <?php if ($user['role'] == 'student'): ?>
+                    
+                    <?php if ($user['role'] == 'teacher'): ?>
                         <div class="info-grid">
                             <div class="info-item">
                                 <div class="info-label">
-                                    Student Code
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['student_code']) ?></div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Phone
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['s_phone']) ?></div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Major
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['major']) ?></div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Year
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['year']) ?></div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Gender
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['s_gender']) ?></div>
-                            </div>
-                        </div>
-
-                    <?php elseif ($user['role'] == 'teacher'): ?>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Department
+                                    สาขาวิชา
                                 </div>
                                 <div class="info-value"><?= htmlspecialchars($user['department']) ?></div>
                             </div>
 
                             <div class="info-item">
                                 <div class="info-label">
-                                    Phone
+                                    เบอรน์โทรศัพท์
                                 </div>
                                 <div class="info-value"><?= htmlspecialchars($user['t_phone']) ?></div>
                             </div>
 
                             <div class="info-item">
                                 <div class="info-label">
-                                    Gender
+                                    เพศ
                                 </div>
                                 <div class="info-value"><?= htmlspecialchars($user['t_gender']) ?></div>
-                            </div>
-                        </div>
-
-                    <?php elseif ($user['role'] == 'admin'): ?>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Phone
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['a_phone']) ?></div>
-                            </div>
-
-                            <div class="info-item">
-                                <div class="info-label">
-                                    Gender
-                                </div>
-                                <div class="info-value"><?= htmlspecialchars($user['a_gender']) ?></div>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -364,7 +310,7 @@ if (!$user) {
                     <!-- Action Buttons -->
                     <div class="action-buttons d-flex align-items-center justify-content-end">
                         <a href="EditProfile.php?user_id=<?= $user['user_id'] ?>" class="btn-custom mt-1 text-decoration-none btn-primary py-2 px-3">
-                            <small>Edit Profile</small>
+                            <small>จัดการโปรไฟล์</small>
                         </a>
                     </div>
 

@@ -54,34 +54,34 @@
 
             <!-- Courses -->
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center px-3" href="CourseManager.php"><small>Courses</small></a>
+                <a class="nav-link d-flex align-items-center px-3" href="CourseManager.php"><small>รายวิชา</small></a>
             </li>
 
             <!-- Create Courses -->
             <li class="nav-item">
-                <a class="nav-link d-flex align-items-center px-3" href="CreateCourse.php"><small>Create Course</small></a>
+                <a class="nav-link d-flex align-items-center px-3" href="CreateCourse.php"><small>สร้างรายวิชา</small></a>
             </li>
 
             <!-- More -->
             <li class="nav-item dropdown">
                 <a class="nav-link d-flex align-items-center px-3" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <small>More</small> <i class='bx bx-chevron-down ms-1'></i>
+                    <small>เพิ่มเติม</small> <i class='bx bx-chevron-down ms-1'></i>
                 </a>
 
                 <ul class="dropdown-menu dropdown-menu-end py-2">
                     <li>
                         <a class="dropdown-item py-2" href="Profile.php?user_id=<?= $_SESSION['user_id'] ?>">
-                            <small>Profile</small>
+                            <small>โปรไฟล์</small>
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item py-2" href="EditProfile.php?user_id=<?= $_SESSION['user_id'] ?>">
-                            <small>Edit Profile</small>
+                            <small>จัดการโปรไฟล์</small>
                         </a>
                     </li>
                     <li>
                         <a class="dropdown-item py-2" href="../../controllers/LogoutController.php">
-                            <small>Logout</small>
+                            <small>ออกจากระบบ</small>
                         </a>
                     </li>
                 </ul>

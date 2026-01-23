@@ -340,8 +340,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
 
             <div class="info-row">
                 <span class="info-label">
-                    <i class='bx bx-book'></i>
-                    <small>Course:</small>
+                    <small>รายวิชา:</small>
                 </span>
                 <span class="info-value">
                     <a href="CourseDetail.php?course_id=<?= htmlspecialchars($course['course_id']) ?>" class="course-link">
@@ -352,8 +351,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
 
             <div class="info-row">
                 <span class="info-label">
-                    <i class='bx bx-detail'></i>
-                    <small>Description:</small>
+                    <small>รายละเอียดเพิ่มเติม:</small>
                 </span>
                 <span class="info-value">
                     <small><?= nl2br(htmlspecialchars($assignment['description'])) ?: '-' ?></small>
@@ -362,8 +360,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
 
             <div class="info-row">
                 <span class="info-label">
-                    <i class='bx bx-calendar'></i>
-                    <small>Deadline:</small>
+                    <small>กำหนดส่ง:</small>
                 </span>
                 <span class="info-value">
                     <small><?= $assignment['deadline'] ? date('d M Y', strtotime($assignment['deadline'])) : 'No deadline set' ?></small>
@@ -372,8 +369,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
 
             <div class="info-row">
                 <span class="info-label">
-                    <i class='bx bx-user'></i>
-                    <small>Created by:</small>
+                    <small>สร้างโดย:</small>
                 </span>
                 <span class="info-value">
                     <small>-</small>
@@ -389,7 +385,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                         <i class='bx bxs-group'></i>
                     </div>
                     <div class="stat-number"><?= $total_students ?></div>
-                    <div class="stat-label">Total Students</div>
+                    <div class="stat-label">นักศึกษาทั้งหมด</div>
                 </div>
             </div>
 
@@ -399,7 +395,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                         <i class='bx bxs-check-circle'></i>
                     </div>
                     <div class="stat-number"><?= $submitted_count ?></div>
-                    <div class="stat-label">Submitted (<?= $submission_rate ?>%)</div>
+                    <div class="stat-label">ส่งแล้ว (<?= $submission_rate ?>%)</div>
                 </div>
             </div>
 
@@ -409,7 +405,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                         <i class='bxr  bx-stopwatch'></i> 
                     </div>
                     <div class="stat-number"><?= $pending_count ?></div>
-                    <div class="stat-label">Pending</div>
+                    <div class="stat-label">รอการส่ง</div>
                 </div>
             </div>
         </div>
@@ -420,8 +416,8 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                 <div class="d-flex align-items-center gap-3">
                     <i class='bx bxs-file fs-3 text-primary'></i>
                     <div>
-                        <h5 class="mb-0 fw-bold">Student Submissions</h5>
-                        <small class="text-muted">Track and manage student submissions</small>
+                        <h5 class="mb-0 fw-bold">งานของนักศึกษา</h5>
+                        <small class="text-muted">ติดตามและจัดการงานของนักศึกษา</small>
                     </div>
                 </div>
             </div>
@@ -430,10 +426,10 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th><small>Student Name</small></th>
-                            <th><small>Submitted At</small></th>
-                            <th style="width: 150px;"><small>Status</small></th>
-                            <th style="width: 150px;" class="text-center"><small>Action</small></th>
+                            <th><small>ชื่อนักศึกษา</small></th>
+                            <th><small>ส่งเมื่อ</small></th>
+                            <th style="width: 150px;"><small>สถานะ</small></th>
+                            <th style="width: 150px;" class="text-center"><small>จัดการ</small></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -442,8 +438,8 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                                 <td colspan="4">
                                     <div class="empty-state">
                                         <i class='bx bx-user-x'></i>
-                                        <p class="text-muted mb-0 fw-semibold">No students enrolled</p>
-                                        <small class="text-muted">There are no students enrolled in this course yet.</small>
+                                        <p class="text-muted mb-0 fw-semibold">ไม่มีนักศ฿กษาในรายวิชา</p>
+                                        <small class="text-muted">ยังไม่มีนักศึกษาในรายวิชาตอนนี้</small>
                                     </div>
                                 </td>
                             </tr>
@@ -482,7 +478,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                                         <?php if ($student['submission_id']): ?>
                                             <a href="SubmissionDetailTeacher.php?submission_id=<?= htmlspecialchars($student['submission_id']) ?>"
                                                 class="btn btn-sm btn-primary">
-                                                <small>View</small>
+                                                <small>เพิ่มเติม</small>
                                             </a>
                                         <?php else: ?>
                                             <small class="text-muted">N/A</small>

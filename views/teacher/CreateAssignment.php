@@ -201,8 +201,8 @@ $course_id = $_GET['course_id'] ?? '';
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <div>
-                        <h4 class="mb-0 fw-bold">Create Assignment</h4>
-                        <small class="text-muted">Add a new assignment for your course</small>
+                        <h4 class="mb-0 fw-bold">สร้างงานt</h4>
+                        <small class="text-muted">สร้างงานใหม่ในรายวิชา</small>
                     </div>
                 </div>
                 <a href="CourseDetail.php?course_id=<?= htmlspecialchars($course_id) ?>" class="action-icon">
@@ -221,12 +221,12 @@ $course_id = $_GET['course_id'] ?? '';
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bx bxs-book-content'></i>
-                        <h5 class="mb-0 fw-bold">Assignment Details</h5>
+                        <h5 class="mb-0 fw-bold">ข้อมูลงาน</h5>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">
-                            <small>Assignment Title</small>
+                            <small>ชื่องาน</small>
                         </label>
                         <input type="text"
                             name="title"
@@ -238,7 +238,7 @@ $course_id = $_GET['course_id'] ?? '';
 
                     <div class="mb-3">
                         <label class="form-label">
-                            <small>Description</small>
+                            <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea name="description"
                             class="form-control"
@@ -251,13 +251,13 @@ $course_id = $_GET['course_id'] ?? '';
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bx bxs-calendar'></i>
-                        <h5 class="mb-0 fw-bold">Deadline & Schedule</h5>
+                        <h5 class="mb-0 fw-bold">กำหนดส่ง</h5>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">
-                                <small>Due Date</small>
+                                <small>กำหนดส่ง</small>
                             </label>
                             <div class="date-input-wrapper">
                                 <i class='bx bx-calendar'></i>
@@ -274,7 +274,7 @@ $course_id = $_GET['course_id'] ?? '';
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-success px-4">
                         <i class='bx bx-check'></i>
-                        <small>Create Assignment</small>
+                        <small>สร้างงาน</small>
                     </button>
                 </div>
 

@@ -232,7 +232,7 @@ $role = $_SESSION['role'] ?? null;
                 <div class="d-flex flex-column">
 
                     <h2 class="mb-1 fw-bold text-dark d-flex align-items-center">
-                        Student Manager
+                        จัดการนักศึกษาในรายวิชา
                     </h2>
 
                 </div>
@@ -253,14 +253,14 @@ $role = $_SESSION['role'] ?? null;
                         <i class='bx bxs-group fs-3 text-primary'></i>
                         <div class="">
                             <div class="d-flex gap-4 align-items-center">
-                                <h5 class="mb-0 fw-bold">Enrolled Students</h5>
+                                <h5 class="mb-0 fw-bold">นักศึกษาในรายวิชา</h5>
                             </div>
-                            <small class="text-muted">Manage students enrolled in this course</small>
+                            <small class="text-muted">จัดการนักศึกษาที่ลงทะเบียนในรายวิชานี้</small>
                         </div>
                         <span class="badge bg-primary ms-3"><?= count($students) ?></span>
                     </div>
                     <a href="AddStudent.php?course_id=<?= $course_id ?>" class="btn btn-primary px-4">
-                        <small>Add Student</small>
+                        <small>เพิ่มนักศึกษา</small>
                     </a>
                 </div>
             </div>
@@ -269,12 +269,12 @@ $role = $_SESSION['role'] ?? null;
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th><small>Student Code</small></th>
-                            <th><small>Name</small></th>
-                            <th><small>Email</small></th>
-                            <th style="width: 120px;"><small>Level</small></th>
-                            <th style="width: 120px;"><small>Class</small></th>
-                            <th style="width: 120px;" class="text-center"><small>Action</small></th>
+                            <th><small>รหัสนักศึกษา</small></th>
+                            <th><small>ชื่อนักศึกษา</small></th>
+                            <th><small>อีเมล</small></th>
+                            <th style="width: 120px;"><small>ระดับชั้น</small></th>
+                            <th style="width: 120px;"><small>ห้องเรียน</small></th>
+                            <th style="width: 120px;" class="text-center"><small>จัดการ</small></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -283,8 +283,8 @@ $role = $_SESSION['role'] ?? null;
                                 <td colspan="6">
                                     <div class="empty-state">
                                         <i class='bx bx-user-x'></i>
-                                        <p class="text-muted mb-2 fw-semibold">No students enrolled</p>
-                                        <small class="text-muted">Click "Add Student" to enroll students in this course</small>
+                                        <p class="text-muted mb-2 fw-semibold">ไม่มีนักศึกษาในรายวิชานี้</p>
+                                        <small class="text-muted">เพิ่มนักศึกษาในรายวิชานี้</small>
                                     </div>
                                 </td>
                             </tr>
@@ -325,7 +325,7 @@ $role = $_SESSION['role'] ?? null;
                                             <input type="hidden" name="course_id" value="<?= htmlspecialchars($course_id) ?>">
                                             <input type="hidden" name="student_id" value="<?= htmlspecialchars($st['student_id']) ?>">
                                             <button type="submit" class="btn btn-sm btn-danger">
-                                                <small><i class='bx bx-trash me-1'></i>Remove</small>
+                                                <small><i class='bx bx-trash me-1'></i>ลบ</small>
                                             </button>
                                         </form>
                                     </td>

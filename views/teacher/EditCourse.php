@@ -189,8 +189,8 @@ $levels = $courseModel->getLevelsByUserId($user_id);
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <div>
-                        <h4 class="mb-0 fw-bold">Edit Course</h4>
-                        <small class="text-muted">Update course information and details</small>
+                        <h4 class="mb-0 fw-bold">แก้ไขรายวิชา</h4>
+                        <small class="text-muted">แก้ไขข้อมูลของรยวิชา</small>
                     </div>
                 </div>
                 <a href="CourseDetail.php?course_id=<?= htmlspecialchars($course_id) ?>"
@@ -211,13 +211,13 @@ $levels = $courseModel->getLevelsByUserId($user_id);
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bx bxs-book-content'></i>
-                        <h5 class="mb-0 fw-bold">Basic Information</h5>
+                        <h5 class="mb-0 fw-bold">ข้อมูลทั่วไป</h5>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">
-                                <small>Course Code</small>
+                                <small>รหัสรายวิชา</small>
                             </label>
                             <input type="text"
                                 class="form-control"
@@ -227,7 +227,7 @@ $levels = $courseModel->getLevelsByUserId($user_id);
 
                         <div class="col-md-8 mb-3">
                             <label class="form-label">
-                                <small>Course Name</small>
+                                <small>ชื่อรายวิชา</small>
                             </label>
                             <input type="text"
                                 name="course_name"
@@ -259,13 +259,12 @@ $levels = $courseModel->getLevelsByUserId($user_id);
                 <!-- Section 2: Course Details -->
                 <div class="form-section">
                     <div class="section-title">
-                        <i class='bx bxs-detail'></i>
-                        <h5 class="mb-0 fw-bold">Course Details</h5>
+                        <h5 class="mb-0 fw-bold">รายละเอียดของรายวิชา</h5>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">
-                            <small>Course Description</small>
+                            <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea name="course_detail"
                             class="form-control"
@@ -278,12 +277,12 @@ $levels = $courseModel->getLevelsByUserId($user_id);
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-primary px-4">
                         <i class='bx bx-save'></i>
-                        <small>Update Course</small>
+                        <small>อัปเดตรายวิชา</small>
                     </button>
                 </div>
 
             </form>
-        </div>
+        </div> 
 
     </div>
 

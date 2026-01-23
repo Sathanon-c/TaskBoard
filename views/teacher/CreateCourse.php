@@ -18,7 +18,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Boxicons -->
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
-
+    <!-- Summer note -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
     <style>
         body {
             background: linear-gradient(135deg, #f5f0ff 0%, #e8dcff 50%, #ddc3ff 100%);
@@ -138,12 +141,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <div>
-                        <h4 class="mb-0 fw-bold">Create New Course</h4>
-                        <small class="text-muted">Add a new course to your teaching portfolio</small>
+                        <h4 class="mb-0 fw-bold">สร้างรายวิชาใหม่</h4>
+                        <small class="text-muted">สร้างรายวิชาของคุณและจัดการ</small>
                     </div>
                 </div>
                 <a href="CourseManager.php" class="btn btn-secondary">
-                    <i class='bx bx-arrow-back'></i>Back to List
+                    <i class='bx bx-arrow-back'></i>ย้อนกลับ
                 </a>
             </div>
         </div>
@@ -157,30 +160,30 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bx bxs-book-content'></i>
-                        <h5 class="mb-0 fw-bold">Basic Information</h5>
+                        <h5 class="mb-0 fw-bold">ข้อมูลทั่วไป</h5>
                     </div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">
-                                <small>Course Code</small>
+                                <small>รหัสวิขา</small>
                             </label>
                             <input type="text"
                                 name="course_code"
                                 class="form-control"
-                                placeholder="e.g., CS101"
+                                placeholder="กรอกรหัสวิชา"
                                 required
                                 maxlength="20">
                         </div>
 
                         <div class="col-md-8 mb-3">
                             <label class="form-label">
-                                <small>Course Name</small>
+                                <small>ชื่อรายวิชา</small>
                             </label>
                             <input type="text"
                                 name="course_name"
                                 class="form-control"
-                                placeholder="e.g., Introduction to Computer Science"
+                                placeholder="กรอกชื่อรายวิชา"
                                 required
                                 maxlength="255">
                         </div>
@@ -189,10 +192,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">
-                                <small>Level</small>
+                                <small>ระดับชั้น</small>
                             </label>
                             <select name="level" class="form-select" required>
-                                <option value="">-- Select Level --</option>
+                                <option value="">-- เลือกระดับชั้น --</option>
                                 <option value="ปวช.1">ปวช.1</option>
                                 <option value="ปวช.2">ปวช.2</option>
                                 <option value="ปวช.3">ปวช.3</option>
@@ -203,10 +206,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
 
                         <div class="col-md-4 mb-3">
                             <label class="form-label">
-                                <small>Class</small>
+                                <small>ห้องเรียน</small>
                             </label>
                             <select name="class_id" class="form-select" required>
-                                <option value="">-- Select Class --</option>
+                                <option value="">-- เลือกห้องเรียน --</option>
                                 <option value="สทส.67.1">สทส.67.1</option>
                                 <option value="สบพ.67.1">สบพ.67.1</option>
                             </select>
@@ -218,17 +221,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                 <div class="form-section">
                     <div class="section-title">
                         <i class='bxr  bx-file-detail'></i>
-                        <h5 class="mb-0 fw-bold">Course Details</h5>
+                        <h5 class="mb-0 fw-bold">รายละเอียดเพิ่มเติม</h5>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">
-                            <small>Course Description</small>
+                            <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea name="course_detail"
                             class="form-control"
                             rows="6"
-                            placeholder="Enter a detailed description of the course objectives, content, and learning outcomes..."
+                            placeholder="กรอกรายละเอียดเพิ่มเพิ่มหรือจุดประสงค์ของรายวิชา"
+                            id="summernote"
                             required></textarea>
                     </div>
                 </div>
@@ -236,7 +240,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                 <!-- Action Buttons -->
                 <div class="action-buttons">
                     <button type="submit" class="btn btn-success px-4">
-                        <small>Create Course</small>
+                        <small>สร้างรายวิชา</small>
                     </button>
                 </div>
 
@@ -276,6 +280,24 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'teacher') {
                 this.style.height = (this.scrollHeight) + 'px';
             });
         }
+    </script>
+
+<!-- Summer note -->
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
     </script>
 </body>
 

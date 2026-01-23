@@ -205,7 +205,7 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-2">
                     <i class='bx bxs-user-plus fs-4 text-primary'></i>
-                    <h4 class="mb-0 fw-bold">Add Students to Course</h4>
+                    <h4 class="mb-0 fw-bold">เพิ่มนักศึกษาเข้ารายวิชา</h4>
                 </div>
                 <a href="CourseStudentManager.php?course_id=<?= $course_id ?>" class="action-icon">
                     <i class='bxr  bx-reply-big fs-5'></i>
@@ -221,8 +221,8 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
                     <div class="d-flex align-items-center gap-3">
                         <i class='bx bxs-group fs-3 text-primary'></i>
                         <div>
-                            <h5 class="mb-0 fw-bold">Available Students</h5>
-                            <small class="text-muted">Select students to add to this course</small>
+                            <h5 class="mb-0 fw-bold">นักศึกษาที่พร้อมเข้าร่วม</h5>
+                            <small class="text-muted">เลือกนักศึกษาที่จะเพิ่มในหลักสูตรนี้</small>
                         </div>
                         <span class="badge bg-primary"><?= count($students) ?></span>
                     </div>
@@ -233,7 +233,7 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
                     <div class="select-all-bar">
                         <input type="checkbox" id="selectAll" class="custom-checkbox">
                         <label for="selectAll" class="mb-0 fw-semibold" style="cursor: pointer;">
-                            <small>Select All Students</small>
+                            <small>เลือกนักศึกษาทั้งหมด</small>
                         </label>
                     </div>
 
@@ -241,12 +241,12 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th style="width: 50px;"><small>Select</small></th>
-                                    <th><small>Student Code</small></th>
-                                    <th><small>Name</small></th>
-                                    <th><small>Major</small></th>
-                                    <th style="width: 100px;"><small>Year</small></th>
-                                    <th style="width: 100px;"><small>Class</small></th>
+                                    <th style="width: 50px;"><small>เลือก</small></th>
+                                    <th><small>รหัสนักศึกษา</small></th>
+                                    <th><small>ชื่อนักศึกษา</small></th>
+                                    <th><small>สาขา</small></th>
+                                    <th style="width: 100px;"><small>ระดับชั้น</small></th>
+                                    <th style="width: 100px;"><small>ห้องเรียน</small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -275,7 +275,7 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
                                             <small><?= htmlspecialchars($stu['year']) ?></small>
                                         </td>
                                         <td class="text-muted">
-                                            <small><?= htmlspecialchars($stu['class_id']) ?></small>
+                                            <small><?= htmlspecialchars($stu['class_id'] ?? '-') ?></small>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -287,17 +287,17 @@ $students = $studentModel->getStudentsNotInCourse($course_id);
                     <div class="submit-bar">
                         <div class="selected-count">
                             <i class='bx bx-check-circle'></i>
-                            <small><span id="selectedCount">0</span> students selected</small>
+                            <small>เลือกนักศึกษา <span id="selectedCount">0</span> คน</small>
                         </div>
                         <button type="submit" class="btn btn-success px-4" id="submitBtn">
-                            <small><i class='bx bx-plus me-1'></i>Add Selected Students</small>
+                            <small><i class='bx bx-plus me-1'></i>เพิ่มนักศึกษา</small>
                         </button>
                     </div>
                 <?php else: ?>
                     <div class="empty-state">
                         <i class='bx bx-user-x'></i>
-                        <h5 class="mb-2 fw-bold text-dark">No Available Students</h5>
-                        <p class="text-muted mb-0">All students have already been added to this course.</p>
+                        <h5 class="mb-2 fw-bold text-dark">ไม่มีนักศึกษาที่เลือกได้ในตอนนี้</h5>
+                        <p class="text-muted mb-0">นักศึกษาทุกคนอยู๋ในรายวิชาเรีบยร้อยแล้ว</p>
                     </div>
                 <?php endif; ?>
 

@@ -37,6 +37,10 @@ $role = $_SESSION['role'] ?? null;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Boxicons -->
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <!-- Summer note -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 
     <style>
         body {
@@ -241,22 +245,22 @@ $role = $_SESSION['role'] ?? null;
             </div>
 
             <div class="info-row">
-                <span class="info-label">Level:</span>
+                <span class="info-label">ปีการศึกษา:</span>
                 <span class="info-value"><small><?= htmlspecialchars($course['level']) ?></small></span>
             </div>
 
             <div class="info-row">
-                <span class="info-label">Class:</span>
+                <span class="info-label">ห้องเรียน:</span>
                 <span class="info-value"><small><?= htmlspecialchars($course['class_id']) ?></small></span>
             </div>
 
             <div class="info-row">
-                <span class="info-label">Detail:</span>
-                <span class="info-value"><small><?= htmlspecialchars($course['course_detail']) ?></small></span>
+                <span class="info-label">รายละเอียดเพิ่มเติม:</span>
+                <span class="info-value"><small><?= ($course['course_detail']) ?></small></span>
             </div>
 
             <div class="info-row">
-                <span class="info-label">Created by:</span>
+                <span class="info-label">สร้างโดย:</span>
                 <span class="info-value"><small><?= htmlspecialchars($course['teacher_first']) ?> <?= htmlspecialchars($course['teacher_last']) ?></small></span>
             </div>
         </div>
@@ -267,14 +271,14 @@ $role = $_SESSION['role'] ?? null;
                 <div class="d-flex align-items-center gap-3 flex-grow-1">
                     <i class='bxr  bx-clipboard fs-3 text-primary'></i>
                     <div>
-                        <h5 class="mb-0 fw-bold">Assignments</h5>
-                        <small class="text-muted">Manage course assignments and submissions</small>
+                        <h5 class="mb-0 fw-bold">จัดการงาน</h5>
+                        <small class="text-muted">จัดการงานและการส่งงาน</small>
                     </div>
                     <span class="badge bg-primary ms-2"><?= count($assignments) ?></span>
                 </div>
                 <a href="CreateAssignment.php?course_id=<?= htmlspecialchars($course_id) ?>"
                     class="btn btn-success px-4">
-                    <small><i class='bx bx-plus me-1'></i>Add Assignment</small>
+                    <small><i class='bx bx-plus me-1'></i>เพิ่มงาน</small>
                 </a>
             </div>
 
@@ -282,10 +286,10 @@ $role = $_SESSION['role'] ?? null;
                 <table class="table table-hover">
                     <thead>
                         <tr>
-                            <th><small>Assignment Title</small></th>
-                            <th><small>Course Code</small></th>
-                            <th><small>Deadline</small></th>
-                            <th style="width: 100px;" class="text-center"><small>Actions</small></th>
+                            <th><small>ชื่องาน</small></th>
+                            <th><small>ชื่อรายวิชา</small></th>
+                            <th><small>กำหนดส่ง</small></th>
+                            <th style="width: 100px;" class="text-center"><small>จัดการ</small></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -294,8 +298,8 @@ $role = $_SESSION['role'] ?? null;
                                 <td colspan="5">
                                     <div class="empty-state">
                                         <i class='bx bx-file'></i>
-                                        <p class="text-muted mb-0 fw-semibold">No assignments found</p>
-                                        <small class="text-muted">Create your first assignment to get started</small>
+                                        <p class="text-muted mb-0 fw-semibold">ไม่พบงาน</p>
+                                        <small class="text-muted">สร้างงานและเริ่มจัดารงาน</small>
                                     </div>
                                 </td>
                             </tr>
@@ -321,7 +325,7 @@ $role = $_SESSION['role'] ?? null;
                                     <td class="text-center">
                                         <a href="AssignmentDetail.php?assignment_id=<?= htmlspecialchars($as['assignment_id']) ?>"
                                             class="btn btn-sm btn-primary">
-                                            <small>View</small>
+                                            <small>เพิ่มเติม</small>
                                         </a>
                                     </td>
                                 </tr>
@@ -337,6 +341,24 @@ $role = $_SESSION['role'] ?? null;
     <?php include_once('../../include/alert.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Summer note -->
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    </script>
 </body>
 
 </html>
