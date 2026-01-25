@@ -376,7 +376,16 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                     <small>สร้างโดย:</small>
                 </span>
                 <span class="info-value">
-                    <small>-</small>
+                    <small><?= htmlspecialchars($_SESSION['first_name'] ?? '0') ?> <?= htmlspecialchars($_SESSION['last_name'] ?? '0') ?></small>
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">
+                    <small>คะแนนเต็ม:</small>
+                </span>
+                <span class="info-value">
+                    <small><?= htmlspecialchars($assignment['max_score'] ?? '0') ?> คะแนน</small>
                 </span>
             </div>
         </div>
@@ -406,7 +415,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
             <div class="col-md-4">
                 <div class="stat-card">
                     <div class="stat-icon stat-icon-pending">
-                        <i class='bxr  bx-stopwatch'></i> 
+                        <i class='bxr  bx-stopwatch'></i>
                     </div>
                     <div class="stat-number"><?= $pending_count ?></div>
                     <div class="stat-label">รอการส่ง</div>
@@ -433,6 +442,7 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                             <th><small>ชื่อนักศึกษา</small></th>
                             <th><small>ส่งเมื่อ</small></th>
                             <th style="width: 150px;"><small>สถานะ</small></th>
+                            <th style="width: 120px;" class="text-center"><small>คะแนน</small></th>
                             <th style="width: 150px;" class="text-center"><small>จัดการ</small></th>
                         </tr>
                     </thead>
@@ -479,13 +489,31 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
                                         </span>
                                     </td>
                                     <td class="text-center">
+                                        <small>
+                                            <?php if ($status === 'Graded'): ?>
+                                                <span class="fw-bold text-primary fs-6">
+                                                    <?= (float)$student['score'] ?>
+                                                </span>
+                                                <span class="fw-bold text-primary fs-6">
+                                                    / <?= $assignment['max_score'] ?>
+                                                </span>
+                                            <?php elseif ($student['submission_id']): ?>
+                                                <span class="badge rounded-pill bg-light text-dark border">
+                                                    รอคะแนน
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="text-muted">-</span>
+                                            <?php endif; ?>
+                                        </small>
+                                    </td>
+                                    <td class="text-center">
                                         <?php if ($student['submission_id']): ?>
                                             <a href="SubmissionDetailTeacher.php?submission_id=<?= htmlspecialchars($student['submission_id']) ?>"
                                                 class="btn btn-sm btn-primary">
-                                                <small>เพิ่มเติม</small>
+                                                <small><?= ($status === 'Graded') ? 'ดูคะแนน' : 'ตรวจงาน' ?></small>
                                             </a>
                                         <?php else: ?>
-                                            <small class="text-muted">N/A</small>
+                                            <small class="text-muted">ยังไม่มีงาน</small>
                                         <?php endif; ?>
                                     </td>
                                 </tr>
@@ -497,11 +525,11 @@ $submission_rate = $total_students > 0 ? round(($submitted_count / $total_studen
         </div>
 
     </div>
-                    <?php include_once('../../include/alert.php');?>
+    <?php include_once('../../include/alert.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <!-- Summer note -->
+    <!-- Summer note -->
     <script>
         $('#summernote').summernote({
             placeholder: 'Hello stand alone ui',

@@ -153,4 +153,31 @@ class StudentModel
 
         return false;
     }
+
+    public function getStudentById($student_id)
+{
+    $query = "
+    SELECT 
+        s.student_id, 
+        s.first_name,
+        s.last_name, 
+        s.student_code,
+        s.major, 
+        s.year, 
+        s.class_id,
+        u.email 
+    FROM 
+        student s
+    JOIN 
+        user u ON s.user_id = u.user_id 
+    WHERE 
+        s.student_id = :student_id
+    LIMIT 1";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(':student_id', $student_id, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 }

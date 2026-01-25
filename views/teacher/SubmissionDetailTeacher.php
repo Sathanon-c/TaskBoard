@@ -393,6 +393,22 @@ $file_path = $submission['file_path'];
                         </div>
 
                         <div class="mb-4">
+                            <label for="score" class="form-label">
+                                <i class='bx bx-trophy'></i>
+                                <small>คะแนน (เต็ม <?= htmlspecialchars($submission['max_score'] ?? '0') ?>)</small>
+                            </label>
+                            <input type="number"
+                                name="score"
+                                id="score"
+                                class="form-control"
+                                step="0.01"
+                                min="0"
+                                max="<?= htmlspecialchars($submission['max_score'] ?? '0') ?>"
+                                value="<?= htmlspecialchars($submission['score'] ?? '') ?>"
+                                placeholder="กรอกคะแนนที่ได้">
+                        </div>
+
+                        <div class="mb-4">
                             <label for="teacher_feedback" class="form-label">
                                 <i class='bx bx-message-square-detail'></i>
                                 <small>ตอบกลับ</small>

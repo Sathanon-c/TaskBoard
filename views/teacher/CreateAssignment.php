@@ -16,7 +16,11 @@ $course_id = $_GET['course_id'] ?? '';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Boxicons -->
     <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
-
+    <!-- Summer note -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+    
     <style>
         body {
             background: linear-gradient(135deg, #f5f0ff 0%, #e8dcff 50%, #ddc3ff 100%);
@@ -170,6 +174,7 @@ $course_id = $_GET['course_id'] ?? '';
             resize: vertical;
             min-height: 120px;
         }
+
         .action-icon {
             display: inline-flex;
             align-items: center;
@@ -241,9 +246,22 @@ $course_id = $_GET['course_id'] ?? '';
                             <small>รายละเอียดเพิ่มเติม</small>
                         </label>
                         <textarea name="description"
+                        id="summernote"
                             class="form-control"
                             rows="6"
                             placeholder="Enter detailed instructions, requirements, and objectives for this assignment..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <small>คะแนนเต็ม</small>
+                        </label>
+                        <input type="number"
+                            name="max_score"
+                            class="form-control"
+                            placeholder="เช่น 10"
+                            required
+                            min="1">
                     </div>
                 </div>
 
@@ -282,7 +300,7 @@ $course_id = $_GET['course_id'] ?? '';
         </div>
 
     </div>
-                    <?php include_once('../../include/alert.php');?>
+    <?php include_once('../../include/alert.php'); ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -318,6 +336,23 @@ $course_id = $_GET['course_id'] ?? '';
             const today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
         }
+    </script>
+    <!-- Summer note -->
+    <script>
+        $('#summernote').summernote({
+            placeholder: 'Hello stand alone ui',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
     </script>
 </body>
 

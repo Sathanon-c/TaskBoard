@@ -264,7 +264,7 @@ $role = $_SESSION['role'] ?? null;
                     </a>
                 </div>
             </div>
-
+ 
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -274,7 +274,7 @@ $role = $_SESSION['role'] ?? null;
                             <th><small>อีเมล</small></th>
                             <th style="width: 120px;"><small>ระดับชั้น</small></th>
                             <th style="width: 120px;"><small>ห้องเรียน</small></th>
-                            <th style="width: 120px;" class="text-center"><small>จัดการ</small></th>
+                            <th style="width: 150px;" class="text-center"><small>จัดการ</small></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -318,16 +318,24 @@ $role = $_SESSION['role'] ?? null;
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <form action="../../controllers/RemoveStudentController.php"
-                                            method="POST"
-                                            class="delete-form"
-                                            onsubmit="return confirm('Are you sure you want to remove <?= htmlspecialchars($st['first_name']) ?> from this course?');">
-                                            <input type="hidden" name="course_id" value="<?= htmlspecialchars($course_id) ?>">
-                                            <input type="hidden" name="student_id" value="<?= htmlspecialchars($st['student_id']) ?>">
-                                            <button type="submit" class="btn btn-sm btn-danger">
-                                                <small><i class='bx bx-trash me-1'></i>ลบ</small>
-                                            </button>
-                                        </form>
+                                        <div class="d-flex gap-2 justify-content-center">
+
+                                            <a href="StudentGradeReport.php?course_id=<?= htmlspecialchars($course_id) ?>&student_id=<?= htmlspecialchars($st['student_id']) ?>"
+                                                class="btn btn-sm btn-primary"title="ดูคะแนน">
+                                                <small>เพิ่มเติม</small>
+                                            </a>
+
+                                            <form action="../../controllers/RemoveStudentController.php"
+                                                method="POST"
+                                                class="delete-form"
+                                                onsubmit="return confirm('Are you sure you want to remove <?= htmlspecialchars($st['first_name']) ?> from this course?');">
+                                                <input type="hidden" name="course_id" value="<?= htmlspecialchars($course_id) ?>">
+                                                <input type="hidden" name="student_id" value="<?= htmlspecialchars($st['student_id']) ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <small><i class='bx bx-trash'></i></small>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

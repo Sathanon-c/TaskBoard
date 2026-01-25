@@ -14,22 +14,23 @@ class AssignmentModel
     // ================================
     // CREATE ASSIGNMENT
     // ================================
-    public function createAssignment($course_id, $title, $description, $deadline, $status = 1)
-    {
-        $sql = "INSERT INTO {$this->table} 
-                (course_id, title, description, deadline, status)
-                VALUES (:course_id, :title, :description, :deadline, :status)";
+public function createAssignment($course_id, $title, $description, $deadline, $max_score, $status = 1)
+{
+    $sql = "INSERT INTO {$this->table} 
+            (course_id, title, description, deadline, max_score, status)
+            VALUES (:course_id, :title, :description, :deadline, :max_score, :status)";
 
-        $stmt = $this->conn->prepare($sql);
+    $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindParam(':course_id', $course_id);
-        $stmt->bindParam(':title', $title);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':deadline', $deadline);
-        $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':course_id', $course_id);
+    $stmt->bindParam(':title', $title);
+    $stmt->bindParam(':description', $description);
+    $stmt->bindParam(':deadline', $deadline);
+    $stmt->bindParam(':max_score', $max_score); // เพิ่มบรรทัดนี้
+    $stmt->bindParam(':status', $status);
 
-        return $stmt->execute();
-    }
+    return $stmt->execute();
+}
 
     // ================================
     // UPDATE ASSIGNMENT
