@@ -258,6 +258,7 @@ $progress_percent = $total_tasks > 0 ? round(($completed_tasks / $total_tasks) *
                         <?php if (empty($grades)): ?>
                         <?php else: ?>
                             <?php foreach ($grades as $g):
+                            $is_exam = isset($g['is_exam']);
                                 $status = $g['status'] ?? 'Pending';
                                 $badge_class = match ($status) {
                                     'Graded' => 'bg-success',
@@ -267,11 +268,16 @@ $progress_percent = $total_tasks > 0 ? round(($completed_tasks / $total_tasks) *
                                 };
                             ?>
                                 <tr>
-                                    <td>
-                                        <div class="fw-bold text-dark">
-                                            <small><?= htmlspecialchars($g['assignment_title']) ?></small>
-                                        </div>
-                                    </td>
+<td>
+        <div class="fw-bold <?= $is_exam ? 'text-primary' : 'text-dark' ?>">
+            <small>
+                <?php if($is_exam): ?>
+                    <i class='bx bx-edit-alt me-1'></i>
+                <?php endif; ?>
+                <?= htmlspecialchars($g['assignment_title']) ?>
+            </small>
+        </div>
+    </td>
 
                                     <td class="text-center">
                                         <span class="student-code-badge">

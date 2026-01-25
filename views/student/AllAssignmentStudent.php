@@ -1,4 +1,8 @@
+
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 // 1. ตรวจสอบสิทธิ์
@@ -12,11 +16,13 @@ include_once('../../config/Database.php');
 include_once('../../models/StudentModel.php');
 include_once('../../models/AssignmentModel.php');
 include_once('../../models/SubmissionModel.php');
+include_once('../../models/ExamModel.php'); // เพิ่ม ExamModel
 
 $db = (new Database())->getConnection();
 $studentModel = new StudentModel($db);
 $assignmentModel = new AssignmentModel($db);
 $submissionModel = new SubmissionModel($db);
+$examModel = new ExamModel($db);
 
 $user_id = $_SESSION['user_id'];
 
@@ -33,74 +39,59 @@ if (!$student_id) {
     exit;
 }
 
-// 4. ดึง Assignments ทั้งหมด
-$assignments = $assignmentModel->getAllAssignmentsByStudentId($student_id, $search_query);
+// 4. จัดการข้อมูลรายการทั้งหมด (Combined List)
+$combined_list = [];
 
-// 5. Loop เพื่อดึงสถานะและกรอง
-$filtered_assignments = [];
+// --- ส่วนที่ 1: จัดการ Assignments ---
+$raw_assignments = $assignmentModel->getAllAssignmentsByStudentId($student_id, $search_query);
 
-foreach ($assignments as $assignment) {
-    $submission = $submissionModel->getSubmissionStatus($assignment['assignment_id'], $student_id);
+foreach ($raw_assignments as $as) {
+    $submission = $submissionModel->getSubmissionStatus($as['assignment_id'], $student_id);
     $status = $submission['status'] ?? 'Pending';
-    $submitted_at = $submission['submitted_at'] ?? null;
-    $deadline_passed = (strtotime($assignment['deadline']) < time() && $status !== 'Graded');
+    $deadline_passed = (strtotime($as['deadline']) < time() && $status !== 'Graded' && $status !== 'Submitted');
 
     $final_status = $status;
     if ($deadline_passed && $status === 'Pending') {
         $final_status = 'Overdue';
     }
 
-    $match_status = (empty($status_filter) || $status_filter === $final_status);
-
-    if ($match_status) {
-        $assignment['submission_status'] = $final_status;
-        $assignment['submitted_at'] = $submitted_at;
-        $filtered_assignments[] = $assignment;
+    // กรองตามสถานะที่เลือก
+    if (empty($status_filter) || $status_filter === $final_status) {
+        $as['type'] = 'assignment';
+        $as['submission_status'] = $final_status;
+        $as['submitted_at'] = $submission['submitted_at'] ?? null;
+        $combined_list[] = $as;
     }
 }
 
-$assignments = $filtered_assignments;
+// --- ส่วนที่ 2: จัดการ Exams (ดึงเฉพาะ status = 'published') ---
+$raw_exams = $examModel->getAllExamsForStudent($student_id, $search_query);
 
-// คำนวณสถิติ
-$total_assignments = count($assignments);
-$submitted_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Submitted'));
-$pending_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Pending'));
-$overdue_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Overdue'));
-$graded_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Graded'));
-
-
-// เพิ่ม Model ข้อสอบเข้ามา
-include_once('../../models/ExamModel.php');
-$examModel = new ExamModel($db);
-
-// --- ดึงข้อมูล EXAMS เพิ่มเติม ---
-$raw_exams = $examModel->getAllExamsForStudent($student_id, $search_query); 
-$combined_list = [];
-
-// จัดการข้อมูล Assignments (แบบเดิม)
-foreach ($assignments as $as) {
-    $as['type'] = 'assignment'; // เพิ่ม type เพื่อแยกประเภท
-    $combined_list[] = $as;
-}
-
-// จัดการข้อมูล Exams 
 foreach ($raw_exams as $ex) {
-    // เช็คว่าสอบไปหรือยังจากตาราง exam_results
     $result = $examModel->getStudentResult($ex['exam_id'], $student_id);
+    $final_status = $result ? 'Graded' : 'Pending';
     
-    $ex['type'] = 'exam';
-    $ex['submission_status'] = $result ? 'Graded' : 'Pending';
-    $ex['score'] = $result['score_obtained'] ?? null;
-    $ex['deadline'] = $ex['created_at']; // หรือคุณจะเพิ่มคอลัมน์ deadline ในตาราง exams ก็ได้
-    
-    // กรองสถานะตาม Filter (ถ้ามี)
-    if (empty($status_filter) || $status_filter === $ex['submission_status']) {
+    // หมายเหตุ: หากข้อสอบมีระบบวันหมดอายุ สามารถเพิ่ม Logic Overdue ได้ที่นี่เหมือน Assignment
+
+    if (empty($status_filter) || $status_filter === $final_status) {
+        $ex['type'] = 'exam';
+        $ex['submission_status'] = $final_status;
+        $ex['score'] = $result['score_obtained'] ?? null;
+        // ปรับชื่อคีย์ให้ตรงกับ Assignment เพื่อแสดงผลในตารางได้ง่าย
+        $ex['deadline'] = $ex['created_at']; 
         $combined_list[] = $ex;
     }
 }
 
-// นำมาแสดงผลรวมกัน
+// นำรายการทั้งหมดมาใช้แสดงผล
 $assignments = $combined_list;
+
+// 5. คำนวณสถิติจากรายการทั้งหมดที่รวมแล้ว (ให้ Stat Cards สะท้อนความจริง)
+$total_assignments = count($assignments);
+$submitted_count = count(array_filter($assignments, fn($a) => in_array($a['submission_status'], ['Submitted', 'Graded'])));
+$pending_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Pending'));
+$overdue_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Overdue'));
+$graded_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Graded'));
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -435,63 +426,54 @@ $assignments = $combined_list;
 
                         <?php else: ?>
                             <?php foreach ($assignments as $as):
-    $type = $as['type']; // 'assignment' หรือ 'exam'
-    $status = $as['submission_status'];
-    
-    // ตั้งค่าสี Badge ตามสถานะ
-    $status_class = match ($status) {
-        'Submitted', 'Graded' => 'bg-success',
-        'Pending' => 'bg-warning',
-        'Overdue' => 'bg-danger',
-        default => 'bg-secondary',
-    };
-?>
-    <tr>
-        <td>
-            <div class="fw-bold text-dark d-flex align-items-center">
-                <?php if($type === 'exam'): ?>
-                    <i class='bx bx-edit-alt me-2 text-error' style="color: #764ba2;"></i>
-                <?php else: ?>
-                    <i class='bx bx-file me-2 text-primary'></i>
-                <?php endif; ?>
-                <small><?= htmlspecialchars($as['title']) ?></small>
-            </div>
-            <?php if($type === 'exam'): ?>
-                <span class="badge bg-light text-dark border" style="font-size: 0.6rem;">EXAM</span>
-            <?php endif; ?>
-        </td>
-        <td class="text-muted">
-            <small><?= htmlspecialchars($as['course_code']) ?> - <?= htmlspecialchars($as['course_name']) ?></small>
-        </td>
-        <td class="text-muted">
-            <small>
-                <i class='bx bx-calendar'></i>
-                <?= date('d M Y', strtotime($as['deadline'])) ?>
-            </small>
-        </td>
-        <td>
-            <span class="badge <?= $status_class ?>">
-                <small><?= htmlspecialchars($status) ?></small>
-            </span>
-        </td>
-        <td class="text-center">
-            <?php if ($type === 'exam'): ?>
-                <?php if ($status === 'Graded'): ?>
-                    <button class="btn btn-sm btn-outline-success disabled"><small>ทำแล้ว</small></button>
-                <?php else: ?>
-                    <a href="TakeExam.php?exam_id=<?= $as['exam_id'] ?>" class="btn btn-sm btn-danger">
-                        <small><i class='bx bx-pencil me-1'></i>เริ่มสอบ</small>
-                    </a>
-                <?php endif; ?>
-            <?php else: ?>
-                <a href="AssignmentDetailStudent.php?assignment_id=<?= htmlspecialchars($as['assignment_id']) ?>"
-                    class="btn btn-sm btn-primary">
-                    <small><i class='bx bx-show me-1'></i>View</small>
-                </a>
-            <?php endif; ?>
-        </td>
-    </tr>
-<?php endforeach; ?>
+                                $type = $as['type'];
+                                $status = $as['submission_status'];
+
+                                $status_class = match ($status) {
+                                    'Graded'    => 'bg-success',
+                                    'Submitted' => 'bg-info',
+                                    'Pending'   => 'bg-warning text-dark',
+                                    'Overdue'   => 'bg-danger',
+                                    default     => 'bg-secondary',
+                                };
+                            ?>
+                                <tr class="<?= $type === 'exam' ? 'table-light' : '' ?>">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <?php if ($type === 'exam'): ?>
+                                                <div class="stat-icon-total me-2 d-flex align-items-center justify-content-center" style="width:30px; height:30px; border-radius:5px; background:#f3e5f5; color:#7b1fa2;">
+                                                    <i class='bx bx-edit-alt'></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark small"><?= htmlspecialchars($as['title']) ?></div>
+                                                    <span class="badge bg-purple text-white" style="background:#7b1fa2; font-size: 0.6rem;">EXAM</span>
+                                                </div>
+                                            <?php else: ?>
+                                                <i class='bx bx-file me-2 text-primary fs-4'></i>
+                                                <div class="fw-bold text-dark small"><?= htmlspecialchars($as['title']) ?></div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted"><small><?= htmlspecialchars($as['course_name']) ?></small></td>
+                                    <td class="text-muted"><small><?= date('d M Y', strtotime($as['deadline'])) ?></small></td>
+                                    <td><span class="badge <?= $status_class ?>"><small><?= $status ?></small></span></td>
+                                    <td class="text-center">
+                                        <?php if ($type === 'exam'): ?>
+                                            <?php if ($status === 'Graded'): ?>
+                                                <button class="btn btn-sm btn-outline-secondary disabled w-100"><small>เรียบร้อย</small></button>
+                                            <?php else: ?>
+                                                <a href="TakeExam.php?exam_id=<?= $as['exam_id'] ?>" class="btn btn-sm btn-danger w-100 shadow-sm">
+                                                    <small>เริ่มสอบ</small>
+                                                </a>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            <a href="AssignmentDetailStudent.php?assignment_id=<?= $as['assignment_id'] ?>" class="btn btn-sm btn-primary w-100">
+                                                <small>ดูงาน</small>
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php endif; ?>
                     </tbody>
                 </table>

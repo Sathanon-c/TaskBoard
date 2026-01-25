@@ -3,14 +3,16 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
 include_once('../../config/Database.php');
 include_once('../../models/CourseModel.php');
 include_once('../../models/EnrollmentModel.php');
 include_once('../../models/AssignmentModel.php');
+include_once('../../models/ExamModel.php'); // เพิ่ม ExamModel
 
 $db = (new Database())->getConnection();
 $courseModel = new CourseModel($db);
+$assignmentModel = new AssignmentModel($db);
+$examModel = new ExamModel($db); // สร้าง Instance
 
 $course_id = $_GET['course_id'] ?? null;
 if (!$course_id) die("Course not found.");
@@ -18,12 +20,34 @@ if (!$course_id) die("Course not found.");
 $course = $courseModel->getCourseById($course_id);
 if (!$course) die("Course not found.");
 
-$assignmentModel = new AssignmentModel($db);
-$assignments = $assignmentModel->getAssignmentsByCourse($course_id);
+// --- รวมข้อมูล งาน และ ข้อสอบ ---
+$combined_list = [];
+
+// 1. ดึงรายการงาน (Assignments)
+$raw_assignments = $assignmentModel->getAssignmentsByCourse($course_id);
+foreach ($raw_assignments as $as) {
+    $as['type'] = 'assignment';
+    // เก็บชื่อตัวแปรให้ตรงกันเพื่อใช้ในตาราง
+    $as['display_title'] = $as['title']; 
+    $as['display_deadline'] = $as['deadline'];
+    $combined_list[] = $as;
+}
+
+// 2. ดึงรายการข้อสอบ (Exams)
+$raw_exams = $examModel->getExamsByCourse($course_id);
+foreach ($raw_exams as $ex) {
+    $ex['type'] = 'exam';
+    $ex['display_title'] = "[EXAM] " . $ex['title'];
+    // ข้อสอบอาจจะใช้วันที่สร้าง หรือคุณจะเพิ่มฟิลด์ deadline ในอนาคตก็ได้
+    $ex['display_deadline'] = $ex['created_at']; 
+    $combined_list[] = $ex;
+}
+
+// 3. นำข้อมูลที่รวมแล้วไปใช้งานแทนตัวแปรเดิม
+$assignments = $combined_list;
 
 $user_id = $_SESSION['user_id'] ?? null;
 $role = $_SESSION['role'] ?? null;
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -304,45 +328,60 @@ $role = $_SESSION['role'] ?? null;
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (empty($assignments)): ?>
-                            <tr>
-                                <td colspan="5">
-                                    <div class="empty-state">
-                                        <i class='bx bx-file'></i>
-                                        <p class="text-muted mb-0 fw-semibold">ไม่พบงาน</p>
-                                        <small class="text-muted">สร้างงานและเริ่มจัดารงาน</small>
-                                    </div>
-                                </td>
-                            </tr>
+    <?php if (empty($assignments)): ?>
+        <tr>
+            <td colspan="4">
+                <div class="empty-state">
+                    <i class='bx bx-file'></i>
+                    <p class="text-muted mb-0 fw-semibold">ไม่พบงานหรือข้อสอบ</p>
+                    <small class="text-muted">สร้างงานหรือข้อสอบเพื่อเริ่มจัดการรายวิชา</small>
+                </div>
+            </td>
+        </tr>
+    <?php else: ?>
+        <?php foreach ($assignments as $item): 
+            $is_exam = ($item['type'] === 'exam');
+        ?>
+            <tr>
+                <td>
+                    <div class="fw-bold text-dark d-flex align-items-center">
+                        <?php if($is_exam): ?>
+                            <small class="text-primary">[EXAM]</small>
                         <?php else: ?>
-                            <?php foreach ($assignments as $as): ?>
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold text-dark">
-                                            <small><?= htmlspecialchars($as['title']) ?></small>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-primary bg-opacity-10 text-light">
-                                            <small><?= htmlspecialchars($course['course_code']) ?></small>
-                                        </span>
-                                    </td>
-                                    <td class="text-muted">
-                                        <small>
-                                            <i class='bx bx-calendar me-1'></i>
-                                            <?= htmlspecialchars($as['deadline'] ?? '-') ?>
-                                        </small>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="AssignmentDetail.php?assignment_id=<?= htmlspecialchars($as['assignment_id']) ?>"
-                                            class="btn btn-sm btn-primary">
-                                            <small>เพิ่มเติม</small>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                            <i class='bx bx-file me-2 text-secondary' title="งาน"></i>
                         <?php endif; ?>
-                    </tbody>
+                        
+                        <small class="ms-1"><?= htmlspecialchars($item['title']) ?></small>
+                    </div>
+                </td>
+                <td>
+                    <span class="badge bg-primary bg-opacity-10 text-light border">
+                        <small><?= htmlspecialchars($course['course_code']) ?></small>
+                    </span>
+                </td>
+                <td class="text-muted">
+                    <small>
+                        <i class='bx bx-calendar me-1'></i>
+                        <?= htmlspecialchars($item['deadline'] ?? '-') ?>
+                    </small>
+                </td>
+                <td class="text-center">
+                    <?php if($is_exam): ?>
+                        <a href="ExamResults.php?exam_id=<?= $item['exam_id'] ?>&course_id=<?= $course_id ?>"
+                            class="btn btn-sm btn-primary">
+                            <small>ผลสอบ</small>
+                        </a>
+                    <?php else: ?>
+                        <a href="AssignmentDetail.php?assignment_id=<?= htmlspecialchars($item['assignment_id']) ?>"
+                            class="btn btn-sm btn-primary">
+                            <small>เพิ่มเติม</small>
+                        </a>
+                    <?php endif; ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</tbody>
                 </table>
             </div>
         </div>

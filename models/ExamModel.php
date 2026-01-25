@@ -67,21 +67,32 @@ class ExamModel {
         ]);
     }
 
-    public function getAllExamsForStudent($student_id, $search = '') {
-    // ดึงข้อสอบในทุกรายวิชาที่นักศึกษาคนนี้ลงทะเบียนเรียน
+
+public function getAllExamsForStudent($student_id, $search = '') {
+    // 1. เขียน Query
     $query = "SELECT e.*, c.course_name, c.course_code 
               FROM exams e
               JOIN course c ON e.course_id = c.course_id
               JOIN enrollment en ON c.course_id = en.course_id
               WHERE en.student_id = :student_id 
-              AND (e.title LIKE :search OR c.course_name LIKE :search)";
-    
+              AND e.status = 'published'";
+              
+    if (!empty($search)) {
+        $query .= " AND (e.title LIKE :search OR c.course_name LIKE :search)";
+    }
+
+    // 2. Prepare Statement
     $stmt = $this->conn->prepare($query);
-    $search_param = "%$search%";
-    $stmt->bindParam(':student_id', $student_id);
-    $stmt->bindParam(':search', $search_param);
+    
+    // 3. Bind Parameters
+    $stmt->bindValue(':student_id', $student_id);
+    if (!empty($search)) {
+        $stmt->bindValue(':search', "%$search%");
+    }
+
+    // 4. สั่งรัน และ RETURN ค่ากลับไป (จุดที่มักจะลืม)
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC); // ต้องมีบรรทัดนี้เพื่อให้ $raw_exams ไม่ว่างเปล่า
 }
 
 public function getStudentResult($exam_id, $student_id) {
