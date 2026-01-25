@@ -10,6 +10,7 @@ include_once('../../models/EnrollmentModel.php');
 include_once('../../models/CourseModel.php');
 include_once('../../models/AssignmentModel.php');
 include_once('../../models/SubmissionModel.php');
+include_once('../../models/ExamModel.php'); // เพิ่ม ExamModel
 
 $db = (new Database())->getConnection();
 $studentModel = new StudentModel($db);
@@ -17,6 +18,7 @@ $enrollmentModel = new EnrollmentModel($db);
 $courseModel = new CourseModel($db);
 $assignmentModel = new AssignmentModel($db);
 $submissionModel = new SubmissionModel($db);
+$examModel = new ExamModel($db); // สร้าง Instance
 
 $user_id = $_SESSION['user_id'];
 $course_id = (int)$_GET['id'];
@@ -40,23 +42,55 @@ if (!$course) {
     exit;
 }
 
-// 6. ดึงรายการงาน (Assignments)
-$assignments = $assignmentModel->getAssignmentsByCourse($course_id);
+// --- รวมรายการ งาน และ ข้อสอบ ---
+$combined_items = [];
 
-// 7. Loop เพื่อดึงสถานะการส่งงานและผนวกเข้ากับรายการ Assignments
-foreach ($assignments as $key => $assignment) {
-    $submission = $submissionModel->getSubmissionStatus($assignment['assignment_id'], $student_id);
-    $assignments[$key]['submission_status'] = $submission['status'] ?? 'Pending';
-    $assignments[$key]['feedback'] = $submission['teacher_feedback'] ?? null;
+// 6. ดึงรายการงาน (Assignments) และเช็คสถานะ
+$raw_assignments = $assignmentModel->getAssignmentsByCourse($course_id);
+foreach ($raw_assignments as $as) {
+    $submission = $submissionModel->getSubmissionStatus($as['assignment_id'], $student_id);
+    $as['type'] = 'assignment';
+    $as['submission_status'] = $submission['status'] ?? 'Pending';
+    $as['feedback'] = $submission['teacher_feedback'] ?? null;
+    $combined_items[] = $as;
 }
 
-// คำนวณสถิติ
-$total_assignments = count($assignments);
-$submitted_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Submitted'));
-$pending_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Pending'));
-$overdue_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Overdue'));
-$graded_count = count(array_filter($assignments, fn($a) => $a['submission_status'] === 'Graded'));
+// 7. ดึงรายการข้อสอบ (Exams) และเช็คสถานะการทำ
+$raw_exams = $examModel->getExamsByCourse($course_id);
+foreach ($raw_exams as $ex) {
+    $result = $examModel->getStudentResult($ex['exam_id'], $student_id);
+    $ex['type'] = 'exam';
+    // สำหรับข้อสอบ ถ้าทำแล้วให้เป็น Graded (ตรวจแล้วอัตโนมัติ) ถ้ายังไม่ทำเป็น Pending
+    $ex['submission_status'] = $result ? 'Graded' : 'Pending';
+    $ex['deadline'] = $ex['created_at']; // ใช้วันที่สร้างเป็นตัวแทนเวลา
+    $combined_items[] = $ex;
+}
 
+// แทนที่ตัวแปรเดิมด้วยรายการที่รวมแล้ว
+$assignments = $combined_items;
+
+// --- คำนวณสถิติใหม่ (รวมทั้งงานและข้อสอบ) ---
+$total_assignments = count($assignments);
+
+// ส่งแล้ว = งานที่ส่งแล้ว + ข้อสอบที่ทำแล้ว
+$submitted_count = count(array_filter($assignments, function($item) {
+    return $item['submission_status'] === 'Submitted' || ($item['type'] === 'exam' && $item['submission_status'] === 'Graded');
+}));
+
+// รอส่ง = งานที่ยังไม่ส่ง + ข้อสอบที่ยังไม่ทำ
+$pending_count = count(array_filter($assignments, fn($item) => $item['submission_status'] === 'Pending'));
+
+// ตรวจแล้ว = งานที่ตรวจแล้ว + ข้อสอบที่ทำแล้ว (เพราะข้อสอบตรวจทันที)
+$graded_count = count(array_filter($assignments, fn($item) => $item['submission_status'] === 'Graded'));
+
+// เกินกำหนด (เฉพาะงานที่มี Deadline และยังไม่ส่ง)
+$overdue_count = count(array_filter($assignments, function($item) {
+    if ($item['type'] === 'assignment' && $item['submission_status'] === 'Pending') {
+        return strtotime($item['deadline']) < time();
+    }
+    return false;
+}));
+?>
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -398,46 +432,70 @@ $graded_count = count(array_filter($assignments, fn($a) => $a['submission_status
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($assignments as $assignment):
-                                $status = $assignment['submission_status'];
-                                $status_class = match ($status) {
-                                    'Submitted' => 'bg-success text-light',
-                                    'Needs Revision' => 'bg-warning text-light',
-                                    'Graded' => 'bg-success text-light',
-                                    default => 'bg-danger',
-                                };
-                            ?>
-                                <tr>
-                                    <td>
-                                        <div class="fw-bold text-dark">
-                                            <small>
-                                                <?= htmlspecialchars($assignment['title']) ?>
-                                                <?php if (!empty($assignment['feedback'])): ?>
-                                                    <i class='bx bxs-message-dots feedback-icon' title="Teacher Feedback Available"></i>
-                                                <?php endif; ?>
-                                            </small>
-                                        </div>
-                                    </td>
-                                    <td class="text-muted">
-                                        <small>
-                                            <i class='bx bx-calendar me-1'></i>
-                                            <?= date('d M Y', strtotime($assignment['deadline'])) ?>
-                                        </small>
-                                    </td>
-                                    <td>
-                                        <span class="badge <?= $status_class ?>">
-                                            <small><?= htmlspecialchars($status) ?></small>
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <a href="AssignmentDetailStudent.php?assignment_id=<?= htmlspecialchars($assignment['assignment_id']) ?>"
-                                            class="btn btn-sm btn-primary">
-                                            <small><i class='bx bx-show me-1'></i>View</small>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
+    <?php foreach ($assignments as $item):
+        $type = $item['type'];
+        $status = $item['submission_status'];
+        
+        // กำหนดสี Badge
+        $status_class = match ($status) {
+            'Submitted', 'Graded' => 'bg-success text-light',
+            'Needs Revision' => 'bg-warning text-dark',
+            'Pending' => 'bg-warning text-dark',
+            default => 'bg-danger',
+        };
+    ?>
+        <tr>
+            <td>
+                <div class="fw-bold text-dark d-flex align-items-center">
+                    <small>
+                        <?php if($type === 'exam'): ?>
+                            <i class='bx bx-edit-alt me-2 text-primary' title="แบบทดสอบออนไลน์"></i>
+                            <span class="text-primary">[EXAM]</span>
+                        <?php else: ?>
+                            <i class='bx bx-file me-2 text-secondary' title="งานส่งไฟล์"></i>
+                        <?php endif; ?>
+                        
+                        <?= htmlspecialchars($item['title']) ?>
+                        
+                        <?php if (!empty($item['feedback'])): ?>
+                            <i class='bx bxs-message-dots feedback-icon' title="มีการตอบกลับจากอาจารย์"></i>
+                        <?php endif; ?>
+                    </small>
+                </div>
+            </td>
+            <td class="text-muted">
+                <small>
+                    <i class='bx bx-calendar me-1'></i>
+                    <?= date('d M Y', strtotime($item['deadline'])) ?>
+                </small>
+            </td>
+            <td>
+                <span class="badge <?= $status_class ?>">
+                    <small><?= htmlspecialchars($status) ?></small>
+                </span>
+            </td>
+            <td class="text-center">
+                <?php if($type === 'exam'): ?>
+                    <?php if($status === 'Graded'): ?>
+                        <button class="btn btn-sm btn-outline-secondary disabled" style="width: 80px;">
+                            <small>เสร็จสิ้น</small>
+                        </button>
+                    <?php else: ?>
+                        <a href="TakeExam.php?exam_id=<?= $item['exam_id'] ?>" 
+                           class="btn btn-sm btn-danger" style="width: 80px;">
+                            <small>เริ่มสอบ</small>
+                        </a>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <a href="AssignmentDetailStudent.php?assignment_id=<?= htmlspecialchars($item['assignment_id']) ?>"
+                        class="btn btn-sm btn-primary" style="width: 80px;">
+                        <small>View</small>
+                    </a>
+                <?php endif; ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+</tbody>
                     </table>
                 </div>
             <?php endif; ?>

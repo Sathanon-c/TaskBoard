@@ -12,35 +12,62 @@ include_once('../../models/CourseModel.php');
 include_once('../../models/StudentModel.php');
 include_once('../../models/SubmissionModel.php');
 include_once('../../models/AssignmentModel.php');
+include_once('../../models/ExamModel.php'); // เพิ่ม ExamModel
 
 $db = (new Database())->getConnection();
 $courseModel = new CourseModel($db);
 $studentModel = new StudentModel($db);
 $submissionModel = new SubmissionModel($db);
+$examModel = new ExamModel($db); // สร้าง Instance
 
 $course_id = (int)$_GET['course_id'];
 $student_id = (int)$_GET['student_id'];
 
 // ดึงข้อมูลพื้นฐาน
 $course = $courseModel->getCourseById($course_id);
-$student = $studentModel->getStudentById($student_id); // สมมติว่ามีฟังก์ชันนี้
+$student = $studentModel->getStudentById($student_id);
 
 if (!$course || !$student) {
     die("Data not found.");
 }
 
-// ดึงข้อมูลคะแนนและงานทั้งหมด (ใช้ฟังก์ชันที่เราคุยกันก่อนหน้า)
-$grades = $submissionModel->getStudentGradesByCourse($course_id, $student_id);
+// --- ดึงข้อมูลคะแนนจาก 2 แหล่ง ---
 
-// คำนวณภาพรวม
+// 1. ดึงข้อมูลคะแนนงาน (Assignments)
+$assignment_grades = $submissionModel->getStudentGradesByCourse($course_id, $student_id);
+
+// 2. ดึงข้อมูลคะแนนข้อสอบ (Exams)
+$all_exams = $examModel->getExamsByCourse($course_id);
+$exam_grades = [];
+
+foreach ($all_exams as $ex) {
+    $result = $examModel->getStudentResult($ex['exam_id'], $student_id);
+    
+    // แปลงรูปแบบ Exam ให้เหมือนกับ Assignment เพื่อใช้ในตารางเดียวกัน
+    $exam_grades[] = [
+        'assignment_title' => "[EXAM] " . $ex['title'],
+        'student_score' => $result ? $result['score_obtained'] : null,
+        'max_score' => $examModel->getTotalExamScore($ex['exam_id']), // ฟังก์ชันนี้ต้องมีใน ExamModel
+        'status' => $result ? 'Graded' : 'Pending',
+        'submitted_at' => $result ? $result['completed_at'] : null,
+        'is_exam' => true // มาร์คไว้แยกประเภทใน HTML
+    ];
+}
+
+// 3. รวมรายการทั้งหมดเข้าด้วยกัน
+$grades = array_merge($assignment_grades, $exam_grades);
+
+// --- คำนวณภาพรวมใหม่ (Dashboard Stats) ---
 $total_max_score = 0;
 $total_earned_score = 0;
 $completed_tasks = 0;
 $total_tasks = count($grades);
 
 foreach ($grades as $g) {
-    $total_max_score += $g['max_score'];
-    $total_earned_score += $g['student_score'] ?? 0;
+    $total_max_score += (float)$g['max_score'];
+    $total_earned_score += (float)($g['student_score'] ?? 0);
+    
+    // นับงาน/สอบที่ทำเสร็จแล้ว
     if ($g['status'] === 'Graded' || $g['status'] === 'Submitted') {
         $completed_tasks++;
     }

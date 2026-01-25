@@ -276,10 +276,21 @@ $role = $_SESSION['role'] ?? null;
                     </div>
                     <span class="badge bg-primary ms-2"><?= count($assignments) ?></span>
                 </div>
-                <a href="CreateAssignment.php?course_id=<?= htmlspecialchars($course_id) ?>"
-                    class="btn btn-success px-4">
-                    <small><i class='bx bx-plus me-1'></i>เพิ่มงาน</small>
-                </a>
+
+                <div class="d-flex align-items-end justify-content-end gap-3">
+
+
+                    <a href="ExamManager.php?course_id=<?= htmlspecialchars($course_id) ?>"
+                        class="btn btn-primary px-4">
+                        <small>จัดการข้อสอบ</small>
+                    </a>
+
+                    <a href="CreateAssignment.php?course_id=<?= htmlspecialchars($course_id) ?>"
+                        class="btn btn-success px-4">
+                        <small>เพิ่มงาน</small>
+                    </a>
+                    
+                </div>
             </div>
 
             <div class="table-responsive">
