@@ -91,8 +91,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     </h2>
                     <p class="text-muted mb-0">กรอกข้อมูลเพื่อสร้างบัญชีใหม่</p>
                 </div>
+
+                <!-- ปุ่มโยนไฟล์ -->
+                <div>
+                    <a href="upload_files.php" class="btn btn-primary">
+                        เพิ่มไฟล์
+                    </a>
+                </div>
             </div>
         </div>
+
 
         <div class="card p-5">
             <form action="../../controllers/CreateUserController.php" method="POST">

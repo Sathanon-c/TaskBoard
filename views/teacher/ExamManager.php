@@ -242,14 +242,16 @@ $draft_count = $total_exams - $published_count;
                     </h2>
                     <p class="text-muted mb-0">สร้างและจัดการข้อสอบสำหรับรายวิชา</p>
                 </div>
-                <div class="d-flex gap-2">
-                    <a href="CourseDetail.php?course_id=<?= $course_id ?>" class="btn btn-secondary">
-                        <i class='bx bx-arrow-back me-1'></i>กลับ
-                    </a>
-                    <button class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#createExamModal">
-                        <i class='bx bx-plus-circle me-1'></i>สร้างข้อสอบใหม่
-                    </button>
-                </div>
+<div class="d-flex gap-2">
+    <a href="CourseDetail.php?course_id=<?= $course_id ?>" class="btn btn-secondary">
+        <i class='bx bx-arrow-back me-1'></i>กลับ
+    </a>
+
+    <button class="btn btn-success px-4" data-bs-toggle="modal" data-bs-target="#createExamModal">
+        <i class='bx bx-plus-circle me-1'></i>สร้างข้อสอบใหม่
+    </button>
+</div>
+
             </div>
         </div>
 
@@ -268,7 +270,7 @@ $draft_count = $total_exams - $published_count;
             <div class="col-md-4">
                 <div class="stat-card">
                     <div class="stat-icon stat-icon-published">
-                        <i class='bx bxs-show'></i>
+                        <i class='bx bxs-file'></i>
                     </div>
                     <div class="stat-number"><?= $published_count ?></div>
                     <div class="stat-label">เปิดสอบแล้ว</div>
@@ -278,7 +280,7 @@ $draft_count = $total_exams - $published_count;
             <div class="col-md-4">
                 <div class="stat-card">
                     <div class="stat-icon stat-icon-draft">
-                        <i class='bx bxs-hide'></i>
+                        <i class='bx bxs-file-x'></i>
                     </div>
                     <div class="stat-number"><?= $draft_count ?></div>
                     <div class="stat-label">ปิดสอบ/แบบร่าง</div>
